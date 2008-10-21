@@ -1,0 +1,11 @@
+JarIndex-Version: 1.0
+
+jtransforms-1.1.jar
+edu
+edu/emory
+edu/emory/mathcs
+edu/emory/mathcs/jtransforms
+edu/emory/mathcs/jtransforms/dct
+edu/emory/mathcs/jtransforms/dst
+edu/emory/mathcs/jtransforms/fft
+
