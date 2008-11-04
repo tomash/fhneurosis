@@ -10,16 +10,16 @@ import java.util.GregorianCalendar;
  */
 public class Starter {
 
-	public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-		GregorianCalendar gc = new GregorianCalendar();
-		String dirname = String.format("%1$tF_%1$tH%1$tM%1$tS", gc);
-		
-		NeuralNetwork nn = new NeuralNetwork(2, dirname);
-		nn.openOutFile();
-		nn.run(20000);
-		
-		//n.dumpFFT();
-		//n.saveProperties("props.txt");
-	}
+        GregorianCalendar gc = new GregorianCalendar();
+        String dirname = String.format("%1$tF_%1$tH%1$tM%1$tS", gc);
+
+        NeuralNetwork nn = new NeuralNetwork(2, dirname);
+        nn.openOutFile();
+        nn.run(65536);
+
+        //n.dumpFFT();
+        //n.saveProperties("props.txt");
+    }
 }
