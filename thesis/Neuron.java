@@ -79,7 +79,7 @@ public class Neuron
         countdv();
         countdw();
         //v += connected.getv() * sens;
-        v += connected.getv(nh) * sens;
+        v += connected.getv(nh-1) * sens;
         v += dv;
 
         //TODO: porzadna implementacja polaczonych neuronow (lista/kolejka)
@@ -123,7 +123,7 @@ public class Neuron
         for(int j=0; j<v_history.size(); ++j)
         {
             v = v_history.get(j);
-            if(v < low_cut_off)	//arbitralne 0.4!
+            if(v < low_cut_off)    //arbitralne 0.4!
                 v_history_flattened.add(0.0);
             else if(v > high_cut_off)
                 v_history_flattened.add(1.0);
@@ -150,8 +150,8 @@ public class Neuron
         System.out.println("calculating and dumping FFT into file " + dirname + "/" + filename);
         int n = round(v_history.size());
 
-        double fn = (1/dt)*0.5;	//maksymalna czestotliwosc - Nyqist!
-        double df = fn/n;	//interwal czestotliwosci
+        double fn = (1/dt)*0.5;    //maksymalna czestotliwosc - Nyqist!
+        double df = fn/n;    //interwal czestotliwosci
         double f=0;
 
         double[] arr = new double[n];
@@ -279,8 +279,8 @@ public class Neuron
             {
                 nh++;
             }
-            System.out.printf("c=%1f, nh_double=%1f, nh=%1d \n", c, nh_double, nh);
-//			nh = new Integer(props.getProperty("nh"));
+            System.out.printf("sens=%1f, c=%1f, nh_double=%1f, nh=%1d \n", sens, c, nh_double, nh);
+//            nh = new Integer(props.getProperty("nh"));
         }
         catch (IOException e)
         {
@@ -362,6 +362,11 @@ public class Neuron
         return eta;
     }
 
+    public double getdt()
+    {
+        return dt;
+    }
+
     public double getv()
     {
         return v;
@@ -414,7 +419,7 @@ public class Neuron
             fw = new FileWriter(currfile);
             this.outfile = new PrintWriter(fw);
         }
-        catch (IOException e) {	e.printStackTrace();
+        catch (IOException e) {    e.printStackTrace();
         }
     }
 
@@ -425,18 +430,18 @@ public class Neuron
 
     private Random generator;
 
-    private double v;	//potencjal czynnosciowy
-    private double dv;	//przyrost v
-    private double w;	//relaksacja
-    private double dw;	//przyrost v
+    private double v;    //potencjal czynnosciowy
+    private double dv;    //przyrost v
+    private double w;    //relaksacja
+    private double dw;    //przyrost v
 
     //wspolczynniki skalujace:
-    private double eps;		//0.005
-    private double a;	//0.5
-    private double b;	//0.15
-    private double d;	//1.0
-    private double D;	//10^-5
-    private double sqrt2D;	//sqrt(2D)
+    private double eps;        //0.005
+    private double a;    //0.5
+    private double b;    //0.15
+    private double d;    //1.0
+    private double D;    //10^-5
+    private double sqrt2D;    //sqrt(2D)
     private double r;
     private double beta; //15
 
@@ -444,17 +449,17 @@ public class Neuron
 
     private double deta;
     private double eta;
-    private double tc;	//0.01 - czas korelacji
-    private double lam;	//odwrotnosc czasu korelacji
+    private double tc;    //0.01 - czas korelacji
+    private double lam;    //odwrotnosc czasu korelacji
 
-    private double t;	//aktualna chwila
-    private double dt;	//skok czasowy... 0.0025?
-    private double xi;	//szum
+    private double t;    //aktualna chwila
+    private double dt;    //skok czasowy... 0.0025?
+    private double xi;    //szum
 
-    private double low_cut_off;	//poziom odciecia v od dolu przy zapisie
-    private double high_cut_off;	//poziom splaszczenia v od gory przy zapisie
+    private double low_cut_off;    //poziom odciecia v od dolu przy zapisie
+    private double high_cut_off;    //poziom splaszczenia v od gory przy zapisie
 
-    private int nh;	//ilosc iteracji trzymanych w historii
+    private int nh;    //ilosc iteracji trzymanych w historii
 
     private double phase;
 
@@ -466,7 +471,7 @@ public class Neuron
     }
 
     public Neuron connected;
-    private double sens;	//sensitivity - wrazliwosc na bodzce
+    private double sens;    //sensitivity - wrazliwosc na bodzce
 
     public double getPeriodic()
     {

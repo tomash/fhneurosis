@@ -10,7 +10,20 @@ public class NeuralNetwork
     public NeuralNetwork(int count, String dirname)
     {
         neurons = new Neuron[count];
+
         this.dirname = dirname;
+        new File(dirname).mkdirs();
+        String outpath = this.dirname + "/" + "props.txt";
+        try
+        {
+            FileUtils.copyFile(new File("props.txt"), new File(outpath));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
         for(int i=0; i<count; i++)
         {
             neurons[i] = new Neuron(dirname);
@@ -57,7 +70,16 @@ public class NeuralNetwork
             }
         }
         System.out.println();
+        out.close();
         //this.dumpFFTs();
+        try
+        {
+            ResultProcessor.countFFT(new File(dirname, "neurons.txt"), 1, neurons[0]);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 
         return 0;
     }
@@ -83,7 +105,7 @@ public class NeuralNetwork
             this.out = new PrintWriter(fw);
             this.saveHeader();
         }
-        catch (IOException e) {	e.printStackTrace();
+        catch (IOException e) {    e.printStackTrace();
         }
     }
 

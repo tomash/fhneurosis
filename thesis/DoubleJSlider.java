@@ -11,7 +11,7 @@ import javax.swing.*;
  */@SuppressWarnings("serial")
 
 public class DoubleJSlider extends JSlider{
-  
+
   /**
    * Constructor - initializes with 0.0,100.0,50.0
    */
@@ -21,7 +21,7 @@ public class DoubleJSlider extends JSlider{
     setDoubleMaximum(100.0);
     setDoubleValue(50.0);
   }
-  
+
   /**
    * Constructor
    */
@@ -31,7 +31,7 @@ public class DoubleJSlider extends JSlider{
     setDoubleMaximum(max);
     setDoubleValue(val);
   }
-  
+
   /**
    * returns Maximum in double precision
    */
@@ -52,21 +52,21 @@ public class DoubleJSlider extends JSlider{
   public double getDoubleValue() {
     return( getValue()/100.0 );
   }
-  
+
   /**
    * sets Maximum in double precision
    */
   public void setDoubleMaximum(double max) {
     setMaximum((int)(max*100));
   }
-  
+
   /**
    * sets Minimum in double precision
    */
   public void setDoubleMinimum(double min) {
     setMinimum((int)(min*100));
   }
-  
+
   /**
    * sets Value in double precision
    */

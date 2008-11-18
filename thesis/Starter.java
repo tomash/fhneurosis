@@ -17,7 +17,7 @@ public class Starter {
 
         NeuralNetwork nn = new NeuralNetwork(2, dirname);
         nn.openOutFile();
-        nn.run(65536);
+        nn.run(16384);
 
         //n.dumpFFT();
         //n.saveProperties("props.txt");
