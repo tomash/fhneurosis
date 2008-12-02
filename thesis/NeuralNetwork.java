@@ -38,7 +38,7 @@ public class NeuralNetwork
             neurons[i].fill_history();
             //System.out.println(neurons[i].toString());
         }
-        neurons[1].setPhase(Math.PI/1.0);
+        //neurons[1].setPhase(Math.PI/1.0);
 
         out = new PrintWriter(System.out);
 
@@ -51,6 +51,7 @@ public class NeuralNetwork
 
     public int run(int iterations)
     {
+    	System.out.print("[sim] ");
         for (int i = 0; i < iterations; ++i)
         {
             out.printf("%f", neurons[0].getT());
@@ -76,6 +77,11 @@ public class NeuralNetwork
         {
             ResultProcessor.countFFT(new File(dirname, "neurons.txt"), 1, neurons[0]);
             ResultProcessor.countFFT(new File(dirname, "neurons.txt"), 2, neurons[1]);
+            //dla 16384 iteracji: 0.507813
+            //dla 4x16384 (65536) iteracji: 0.501953
+            ResultProcessor.countSNR(new File(dirname, "neuron00fft.txt"));
+            ResultProcessor.countSNR(new File(dirname, "neuron01fft.txt"));
+
         }
         catch(Exception e)
         {

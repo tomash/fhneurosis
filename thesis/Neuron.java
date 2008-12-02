@@ -279,7 +279,7 @@ public class Neuron
             {
                 nh++;
             }
-            System.out.printf("sens=%1f, c=%1f, nh_double=%1f, nh=%1d \n", sens, c, nh_double, nh);
+            System.out.printf("[nrn] sens=%1f, c=%1f, nh_double=%1f, nh=%1d \n", sens, c, nh_double, nh);
 //            nh = new Integer(props.getProperty("nh"));
         }
         catch (IOException e)
