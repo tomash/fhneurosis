@@ -75,6 +75,7 @@ public class NeuralNetwork
         try
         {
             ResultProcessor.countFFT(new File(dirname, "neurons.txt"), 1, neurons[0]);
+            ResultProcessor.countFFT(new File(dirname, "neurons.txt"), 2, neurons[1]);
         }
         catch(Exception e)
         {
