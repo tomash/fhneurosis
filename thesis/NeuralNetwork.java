@@ -45,6 +45,8 @@ public class NeuralNetwork
         //dirrty hack!
         neurons[0].connected = neurons[1];
         neurons[1].connected = neurons[0];
+        neurons[2].connected = neurons[0];
+        neurons[3].connected = neurons[0];
 
 
     }
@@ -60,10 +62,11 @@ public class NeuralNetwork
                 neurons[j].iterate();
                 out.printf("\t%f", neurons[j].getv());
                 out.printf("\t%f", neurons[j].get_flat_v());
-
             }
-            out.printf("\t%f", neurons[0].getPeriodic());
-            out.printf("\t%f", neurons[1].getPeriodic());
+            for (int j = 0; j < neurons.length; ++j)
+            {
+            	out.printf("\t%f", neurons[0].getPeriodic());
+            }
             out.print("\n");
             if(i%1000==0)
             {
@@ -73,31 +76,31 @@ public class NeuralNetwork
         System.out.println();
         out.close();
         //this.dumpFFTs();
-        try
+        this.dump_fft_and_snr();
+
+        return 0;
+    }
+
+    public void dump_fft_and_snr()
+    {
+    	try
         {
-            ResultProcessor.countFFT(new File(dirname, "neurons.txt"), 1, neurons[0]);
-            ResultProcessor.countFFT(new File(dirname, "neurons.txt"), 2, neurons[1]);
+        	for (int j = 0; j < neurons.length; ++j)
+            {
+        		ResultProcessor.countFFT(new File(dirname, "neurons.txt"), j+1, neurons[j]);
+            }
+        	for (int j = 0; j < neurons.length; ++j)
+            {
+        		ResultProcessor.countSNR(new File(dirname, "neuron0"+j+"fft.txt"));
+            }
             //dla 16384 iteracji: 0.507813
             //dla 4x16384 (65536) iteracji: 0.501953
-            ResultProcessor.countSNR(new File(dirname, "neuron00fft.txt"));
-            ResultProcessor.countSNR(new File(dirname, "neuron01fft.txt"));
 
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-
-        return 0;
-    }
-
-    public int dumpFFTs()
-    {
-
-        neurons[0].dumpFFT(true);
-        neurons[1].dumpFFT(true);
-
-        return 0;
     }
 
     public void openOutFile()
