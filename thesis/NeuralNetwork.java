@@ -28,7 +28,7 @@ public class NeuralNetwork
         {
             neurons[i] = new Neuron(dirname);
             try {
-                Thread.sleep(100);
+                Thread.sleep(000);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -44,9 +44,10 @@ public class NeuralNetwork
 
         //dirrty hack!
         neurons[0].connected = neurons[1];
-        neurons[1].connected = neurons[0];
-        neurons[2].connected = neurons[0];
-        neurons[3].connected = neurons[0];
+        for(int i=1; i<neurons.length; i++)
+        {
+        	neurons[i].connected = neurons[0];
+        }
 
 
     }
@@ -60,6 +61,7 @@ public class NeuralNetwork
             for (int j = 0; j < neurons.length; ++j)
             {
                 neurons[j].iterate();
+
                 out.printf("\t%f", neurons[j].getv());
                 out.printf("\t%f", neurons[j].get_flat_v());
             }
@@ -72,8 +74,10 @@ public class NeuralNetwork
             {
                 System.out.print(".");
             }
+            //System.out.printf("T: %f, t: %f, sin: %f \n", neurons[0].getT(), neurons[0].gett(), neurons[0].getPeriodic());
         }
         System.out.println();
+        //System.out.printf("END TIMES: t1: %f, t2: %f", neurons[0].getT(), neurons[1].getT());
         out.close();
         //this.dumpFFTs();
         this.dump_fft_and_snr();
@@ -87,7 +91,7 @@ public class NeuralNetwork
         {
         	for (int j = 0; j < neurons.length; ++j)
             {
-        		ResultProcessor.countFFT(new File(dirname, "neurons.txt"), j+1, neurons[j]);
+        		ResultProcessor.countFFT(new File(dirname, "neurons.txt"), (2*j)+1, neurons[j]);
             }
         	for (int j = 0; j < neurons.length; ++j)
             {

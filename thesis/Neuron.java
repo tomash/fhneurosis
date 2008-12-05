@@ -63,7 +63,9 @@ public class Neuron
 
          v_history = new LinkedList<Double>();
          generator = new Random(new Date().getTime());
+         //generator = new Random(35);
 
+         //System.out.println(generator.nextDouble());
          generator.nextDouble();
 
          this.dirname = dirname;
@@ -79,7 +81,7 @@ public class Neuron
         countdv();
         countdw();
         //v += connected.getv() * sens;
-        v += connected.getv(nh-1) * sens;
+        //v += connected.getv(nh-1) * sens;
         v += dv;
 
         //TODO: porzadna implementacja polaczonych neuronow (lista/kolejka)
@@ -91,6 +93,9 @@ public class Neuron
         //v_history.add(v);
         memorize_v();
         t += dt;
+        T += dt;
+        //if (t>q)
+        //	t -= q;
 
         /* Runge-Kutta:
          * dy/dt = f(t,y), y(t0) = y0
@@ -264,7 +269,9 @@ public class Neuron
             //System.out.printf("D=%1f, sqrt2D=%1f" , D, sqrt2D);
             r = new Double(props.getProperty("r"));
             //beta = new Double(props.getProperty("beta"));
-            beta = new Double(props.getProperty("q"))*Math.PI;
+            //q - czas trwania okresu (w s)
+            q = new Double(props.getProperty("q"));
+            beta = q*Math.PI;
             tc = new Double(props.getProperty("tc"));
             dt = new Double(props.getProperty("dt"));
             sens = new Double(props.getProperty("sens"));
@@ -444,6 +451,7 @@ public class Neuron
     private double sqrt2D;    //sqrt(2D)
     private double r;
     private double beta; //15
+    private double q; //15
 
     private int nnumber;
 
@@ -452,7 +460,8 @@ public class Neuron
     private double tc;    //0.01 - czas korelacji
     private double lam;    //odwrotnosc czasu korelacji
 
-    private double t;    //aktualna chwila
+    private double t;    //aktualna chwila, mod T
+    private double T;    //aktualna chwila
     private double dt;    //skok czasowy... 0.0025?
     private double xi;    //szum
 
@@ -466,6 +475,11 @@ public class Neuron
     private LinkedList<Double> v_history;
 
     public double getT()
+    {
+        return T;
+    }
+
+    public double gett()
     {
         return t;
     }

@@ -15,7 +15,7 @@ public class Starter {
         GregorianCalendar gc = new GregorianCalendar();
         String dirname = String.format("%1$tF_%1$tH%1$tM%1$tS", gc);
 
-        NeuralNetwork nn = new NeuralNetwork(4, dirname);
+        NeuralNetwork nn = new NeuralNetwork(8, dirname);
         nn.openOutFile();
         nn.run(16384*2);
 
