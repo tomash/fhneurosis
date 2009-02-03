@@ -43,19 +43,34 @@ public class NeuralNetwork
         out = new PrintWriter(System.out);
 
         //dirrty hack!
-        neurons[0].connected = neurons[1];
-        for(int i=1; i<neurons.length; i++)
+        if(neurons.length > 1)
         {
-        	neurons[i].connected = neurons[0];
+        	neurons[0].connected = neurons[1];
+        	neurons[1].connected = neurons[0];
+        	//for(int i=1; i<neurons.length; i++)
+            //{
+            //	neurons[i].connected = neurons[0];
+            //}
         }
+
 
 
     }
 
     public int run(int iterations)
     {
+    	int i = 0;
+    	System.out.println("[sim] 2048 without saving...");
+    	for (i = 0; i < 8192; ++i)
+    	{
+    		for (int j = 0; j < neurons.length; ++j)
+            {
+                neurons[j].iterate();
+            }
+    	}
+
     	System.out.print("[sim] ");
-        for (int i = 0; i < iterations; ++i)
+        for (; i < iterations; ++i)
         {
             out.printf("%f", neurons[0].getT());
             for (int j = 0; j < neurons.length; ++j)
@@ -64,10 +79,11 @@ public class NeuralNetwork
 
                 out.printf("\t%f", neurons[j].getv());
                 out.printf("\t%f", neurons[j].get_flat_v());
+                out.printf("\t%f", neurons[j].getPeriodic());
             }
             for (int j = 0; j < neurons.length; ++j)
             {
-            	out.printf("\t%f", neurons[0].getPeriodic());
+           		out.printf("\t%f", neurons[0].getPeriodic());
             }
             out.print("\n");
             if(i%1000==0)
@@ -91,7 +107,8 @@ public class NeuralNetwork
         {
         	for (int j = 0; j < neurons.length; ++j)
             {
-        		ResultProcessor.countFFT(new File(dirname, "neurons.txt"), (2*j)+1, neurons[j]);
+        		//ResultProcessor.countFFT(new File(dirname, "neurons.txt"), (3*j)+1, neurons[j]);
+        		ResultProcessor.countFFT(new File(dirname, "neurons.txt"), (3*j)+2, neurons[j]);
             }
         	for (int j = 0; j < neurons.length; ++j)
             {

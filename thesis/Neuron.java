@@ -81,7 +81,7 @@ public class Neuron
         countdv();
         countdw();
         //v += connected.getv() * sens;
-        //v += connected.getv(nh-1) * sens;
+        v += connected.getv(nh-1) * sens;
         v += dv;
 
         //TODO: porzadna implementacja polaczonych neuronow (lista/kolejka)
@@ -94,9 +94,9 @@ public class Neuron
         memorize_v();
         t += dt;
         T += dt;
-        //if (t>q)
-        //	t -= q;
-
+        if (t>q)
+        	t -= q;
+        //System.out.println(t);
         /* Runge-Kutta:
          * dy/dt = f(t,y), y(t0) = y0
          * k1 = f(tn,yn)
@@ -271,9 +271,10 @@ public class Neuron
             //beta = new Double(props.getProperty("beta"));
             //q - czas trwania okresu (w s)
             q = new Double(props.getProperty("q"));
-            beta = q*Math.PI;
+            beta = (2.0*Math.PI)/q;
             tc = new Double(props.getProperty("tc"));
             dt = new Double(props.getProperty("dt"));
+            sqrtdt = Math.sqrt(dt);
             sens = new Double(props.getProperty("sens"));
 
             low_cut_off = new Double(props.getProperty("low_cut_off"));
@@ -286,7 +287,7 @@ public class Neuron
             {
                 nh++;
             }
-            System.out.printf("[nrn] sens=%1f, c=%1f, nh_double=%1f, nh=%1d \n", sens, c, nh_double, nh);
+            System.out.printf("[nrn] sens=%1f, c=%1f, nh_double=%1f, nh=%1d, dt=%1f, sqrt(dt)=%1f \n", sens, c, nh_double, nh, dt, sqrtdt);
 //            nh = new Integer(props.getProperty("nh"));
         }
         catch (IOException e)
@@ -361,9 +362,16 @@ public class Neuron
     private double noiseOU()
     {
         //double rnd = generator.nextDouble();
-        //deta = lam * rnd - lam * eta;
-        deta = lam * xi - eta * lam;
-        deta *= dt;
+    	//poprzednie - tylko skladnik 1-go rzedu
+        //deta =  - (eta * lam * dt) + (lam * xi * dt);
+
+    	deta = (lam * xi * dt) - (eta * lam * dt);
+
+    	//mannella - palleschi
+    	//poprawka rzedu 1/2
+    	double y1 = generator.nextGaussian();
+    	deta += (lam * y1 *  sqrtdt ) ;
+
         eta += deta;
         //xi = eta;
         return eta;
@@ -463,6 +471,7 @@ public class Neuron
     private double t;    //aktualna chwila, mod T
     private double T;    //aktualna chwila
     private double dt;    //skok czasowy... 0.0025?
+    private double sqrtdt;    //pierwiastek z dt
     private double xi;    //szum
 
     private double low_cut_off;    //poziom odciecia v od dolu przy zapisie

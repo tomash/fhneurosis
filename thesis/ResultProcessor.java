@@ -51,6 +51,7 @@ public class ResultProcessor
             ++i;
         }
         System.out.print(" transforming... ");
+        System.out.println(n);
         DoubleFFT_1D transform = new DoubleFFT_1D(n);
         transform.realForward(arr);
         //falszujemy:
@@ -133,12 +134,12 @@ public class ResultProcessor
 
         double around = 0.0;
         int count = 0;
-        for(int i=index_of_max-5; i<index_of_max; ++i)
+        for(int i=index_of_max-5-1; i<index_of_max-1; ++i)
         {
         	around += v_fft.get(i);
         	++count;
         }
-        for(int i=index_of_max+5; i>index_of_max; --i)
+        for(int i=index_of_max+5+1; i>index_of_max+1; --i)
         {
         	around += v_fft.get(i);
         	++count;
