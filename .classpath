@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/d/devel/java/fft_libs/jtransforms-1.6.jar"/>
+	<classpathentry kind="lib" path="/d/java/workspace/Thesis/log4j-1.2.15.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
