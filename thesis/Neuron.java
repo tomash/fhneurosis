@@ -12,12 +12,19 @@ import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Random;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import edu.emory.mathcs.jtransforms.fft.*;
 
 public class Neuron
 {
+	private static final Logger logger = Logger.getLogger(Neuron.class);
+
     public Neuron(String dirname)
     {
+    	BasicConfigurator.configure();
+
          eps = 0.005;
          a = 0.5;
          b = 0.15;
@@ -81,7 +88,9 @@ public class Neuron
         countdv();
         countdw();
         //v += connected.getv() * sens;
-        v += connected.getv(nh-1) * sens;
+        if(connected != null)
+        	v += connected.getv(nh-1) * sens;
+
         v += dv;
 
         //TODO: porzadna implementacja polaczonych neuronow (lista/kolejka)

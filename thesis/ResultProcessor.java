@@ -11,10 +11,14 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.apache.log4j.Logger;
+
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
 public class ResultProcessor
 {
+	private static final Logger logger = Logger.getLogger(ResultProcessor.class);
+
     public static void countFFT(File input, int column, Neuron neuron)
         throws IOException
     {
