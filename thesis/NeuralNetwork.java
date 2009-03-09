@@ -46,22 +46,22 @@ public class NeuralNetwork
         if(neurons.length > 1)
         {
         	neurons[0].connected = neurons[1];
-        	neurons[1].connected = neurons[0];
-        	//for(int i=1; i<neurons.length; i++)
-            //{
-            //	neurons[i].connected = neurons[0];
-            //}
+        	//neurons[1].connected = neurons[0];
+        	for(int i=1; i<neurons.length; i++)
+            {
+            	neurons[i].connected = neurons[0];
+            }
         }
 
 
 
     }
 
-    public int run(int iterations)
+    public int run(int dry_run, int iterations)
     {
     	int i = 0;
-    	System.out.println("[sim] 2048 without saving...");
-    	for (i = 0; i < 8192; ++i)
+    	System.out.println("[sim] "+ dry_run + " without saving...");
+    	for (i = 0; i < dry_run; ++i)
     	{
     		for (int j = 0; j < neurons.length; ++j)
             {
@@ -70,7 +70,7 @@ public class NeuralNetwork
     	}
 
     	System.out.print("[sim] ");
-        for (; i < iterations; ++i)
+        for (i=0; i < iterations; ++i)
         {
             out.printf("%f", neurons[0].getT());
             for (int j = 0; j < neurons.length; ++j)

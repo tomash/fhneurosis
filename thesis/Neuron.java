@@ -269,7 +269,6 @@ public class Neuron
             //System.out.printf("D=%1f, sqrt2D=%1f" , D, sqrt2D);
             r = new Double(props.getProperty("r"));
             //beta = new Double(props.getProperty("beta"));
-            //q - czas trwania okresu (w s)
             q = new Double(props.getProperty("q"));
             beta = (2.0*Math.PI)/q;
             tc = new Double(props.getProperty("tc"));
@@ -355,7 +354,7 @@ public class Neuron
     private double noiseGauss()
     {
         //xi = generator.nextGaussian();
-        xi = generator.nextGaussian() * Math.sqrt(2.0*D);
+        xi = generator.nextGaussian();// * Math.sqrt(2.0*D);
         return xi;
     }
 
