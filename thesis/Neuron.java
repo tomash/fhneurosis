@@ -69,8 +69,10 @@ public class Neuron
          dw=0;
 
          v_history = new LinkedList<Double>();
-         generator = new Random(new Date().getTime());
-         //generator = new Random(35);
+         long seed = new Date().getTime();
+         logger.info("initializing Random with seed " + seed);
+         generator = new Random(seed);
+         //generator = new Random(1000);
 
          //System.out.println(generator.nextDouble());
          generator.nextDouble();

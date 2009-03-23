@@ -23,7 +23,7 @@ public class Starter {
         logger.info("Starting our simulation, results directory is:  " + dirname);
 
         NeuralNetwork nn = new NeuralNetwork(1, dirname);
-        nn.run(8192, 16384*4);
+        nn.run(4096, 8192*8);
 
     }
 }

@@ -14,7 +14,7 @@ public class NeuralNetwork
 
     public NeuralNetwork(int count, String dirname)
     {
-    	logger.debug("initializing " + count + "neurons");
+    	logger.debug("initializing " + count + " neurons");
         neurons = new Neuron[count];
 
         this.dirname = dirname;
