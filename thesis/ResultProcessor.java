@@ -10,8 +10,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 
 import edu.emory.mathcs.jtransforms.fft.DoubleFFT_1D;
 
@@ -19,15 +21,50 @@ public class ResultProcessor
 {
 	private static final Logger logger = Logger.getLogger(ResultProcessor.class);
 
-    public static void countFFT(File input, int column, Neuron neuron)
+	public static void main(String[] args) throws IOException, InterruptedException
+	{
+		if(args.length < 3)
+		{
+			System.out.println("syntax: ResulProcessor dirname column neuron_number");
+			return;
+		}
+		BasicConfigurator.configure();
+		logger.info("Loading properties and config");
+		String dirname = args[0];
+		int column = new Integer(args[1]);
+		int neuron_number = new Integer(args[2]);
+		File results = new File(dirname, "neurons.txt");
+		File props_file = new File(dirname, "props.txt");
+
+		Properties props = new Properties();
+		props.load(new FileInputStream(props_file));
+		double dt = new Double(props.getProperty("dt"));
+
+		logger.info(String.format("loaded properties: dirname %s, column %d, neuron_number %d, dt %f", dirname, column, neuron_number, dt));
+		logger.info("counting FFT");
+		String fft_filename = countFFT(results, column, dt, neuron_number);
+		logger.info("counting SNR");
+		ResultProcessor.countSNR(new File(dirname, fft_filename));
+		//return;
+		System.exit(0);
+	}
+
+	public static String countFFT(File input, int column, Neuron neuron)
+		throws IOException
+	{
+		return countFFT(input, column, neuron.getdt(), neuron.getNnumber());
+	}
+
+    public static String countFFT(File input, int column, double dt, int neuron_number)
         throws IOException
     {
         //String filename = String.format("neuron%1$02dfft.txt", this.getNnumber());
         //System.out.println("calculating and dumping FFT into file " + dirname + "/" + filename);
 
+
         LinkedList<Double> v_history = new LinkedList<Double>();
 
-        System.out.print("\n[FFT] loading results from file " + input.getPath() +" ... ");
+        logger.info(String.format("[FFT] loading results from file %s",input.getPath()));
 
         FileInputStream fstream = new FileInputStream(input);
         DataInputStream din = new DataInputStream(fstream);
@@ -42,7 +79,7 @@ public class ResultProcessor
             v_history.add(Double.valueOf(strLine.split("\\s")[column]));
         }
 
-        double dt = neuron.getdt();
+        //double dt = neuron.getdt();
         double fn = (1/dt)*0.5;    //maksymalna czestotliwosc - Nyqist!
         double df = fn/n;    //interwal czestotliwosci
         double f=0;
@@ -54,8 +91,7 @@ public class ResultProcessor
             arr[i] = itr.next();
             ++i;
         }
-        System.out.print(" transforming... ");
-        System.out.println(n);
+        logger.info("[FFT] transforming... " + n);
         DoubleFFT_1D transform = new DoubleFFT_1D(n);
         transform.realForward(arr);
         //falszujemy:
@@ -65,14 +101,15 @@ public class ResultProcessor
         arr[3] = 0;
         arr[4] = 0;
         arr[5] = 0;
-        System.out.print(" saving... ");
+        logger.info("[FFT] saving... ");
         //transform.realForward((double[])(Double[])v_history.toArray());
 
         PrintWriter outfile;
         FileWriter fw;
         String dirname = input.getParent();
-        String filename = String.format("neuron%1$02dfft.txt", neuron.getNnumber());
-        System.out.print("\n[FFT] calculating and dumping FFT into file " + dirname + "/" + filename + " ... ");
+        String filename = String.format("neuron_%1$02d_%2$02d_fft.txt", neuron_number, column);
+        //System.out.print("\n[FFT] calculating and dumping FFT into file " + dirname + "/" + filename + " ... ");
+        logger.info(String.format("[FFT] calculating and dumping FFT into file %s/%s", dirname, filename));
         try
         {
             new File(dirname).mkdirs();
@@ -88,12 +125,14 @@ public class ResultProcessor
                 f += df;
             }
             outfile.close();
-            System.out.print(" completed & closing...\n");
+            logger.info("[FFT] completed & closing");
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+        //return String.format("%s/%s", dirname, filename);
+        return filename;
 
     }
 
@@ -103,7 +142,7 @@ public class ResultProcessor
     	LinkedList<Double> v_fft = new LinkedList<Double>();
     	LinkedList<Double> v_f = new LinkedList<Double>();
 
-        System.out.print("\n[SNR] loading FFT from file " + input.getPath());
+        logger.info(String.format("[SNR] loading FFT from file %s", input.getPath()));
 
         FileInputStream fstream = new FileInputStream(input);
         DataInputStream din = new DataInputStream(fstream);
@@ -116,7 +155,7 @@ public class ResultProcessor
             v_f.add(Double.valueOf(strLine.split("\\s")[0]));
             v_fft.add(Double.valueOf(strLine.split("\\s")[1]));
         }
-        System.out.print(" ... processing");
+        logger.info("[SNR] loaded, processing...");
 
         int index_of_max = 0;
         double max = 0.0;
@@ -132,9 +171,8 @@ public class ResultProcessor
         		index_of_max = v_fft.indexOf(curr);
         	}
         }
-        System.out.print(" ... done \n");
 
-        System.out.printf("[SNR] index of max: %1d ; value at max: %1f (for f=%1f)\n", index_of_max, max, v_f.get(index_of_max));
+        logger.info(String.format("[SNR] index of max: %1d ; value at max: %1f (for f=%1f)", index_of_max, max, v_f.get(index_of_max)));
 
         double around = 0.0;
         int count = 0;
@@ -149,7 +187,7 @@ public class ResultProcessor
         	++count;
         }
         double mean = (around/count);
-        System.out.printf("[SNR] taken %1d values around; mean= %1f; SNR= %f \n", count, mean, (v_fft.get(index_of_max)/mean));
+        logger.info(String.format("[SNR] taken %1d values around; mean= %1f; SNR= %f", count, mean, (v_fft.get(index_of_max)/mean)));
 
         //System.out.println("[SNR] indexof max: " + index_of_max);
         //System.out.println("[SNR] value at max: " + v_fft.get(index_of_max));

@@ -297,7 +297,8 @@ public class Neuron
             {
                 nh++;
             }
-            System.out.printf("[nrn] sens=%1f, c=%1f, nh_double=%1f, nh=%1d, dt=%1f, sqrt(dt)=%1f \n", sens, c, nh_double, nh, dt, sqrtdt);
+            //System.out.printf("[nrn] sens=%1f, c=%1f, nh_double=%1f, nh=%1d, dt=%1f, sqrt(dt)=%1f \n", sens, c, nh_double, nh, dt, sqrtdt);
+            logger.info(String.format("sens=%1f, c=%1f, nh_double=%1f, nh=%1d, dt=%1f, D=%e", sens, c, nh_double, nh, dt, D));
 //            nh = new Integer(props.getProperty("nh"));
         }
         catch (IOException e)

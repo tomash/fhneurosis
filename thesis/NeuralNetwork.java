@@ -114,18 +114,23 @@ public class NeuralNetwork
     public void dump_fft_and_snr()
     {
     	int column_number;
+    	String[] fft_filenames = new String[neurons.length];
+    	String[] fft_filepaths = new String[neurons.length];
     	try
         {
         	for (int j = 0; j < neurons.length; ++j)
             {
         		column_number = (3*j)+2;
-        		logger.debug("calculating FFT for neuron "+j+ " by column number "+column_number);
-        		ResultProcessor.countFFT(new File(dirname, "neurons.txt"), column_number, neurons[j]);
+
+        		logger.info(String.format("calculating FFT for neuron %d by column number %d", j, column_number));
+        		fft_filenames[j] = ResultProcessor.countFFT(new File(dirname, "neurons.txt"), column_number, neurons[j]);
+        		fft_filepaths[j] = String.format("%s/%s", dirname, fft_filenames[j]);
             }
         	for (int j = 0; j < neurons.length; ++j)
             {
         		logger.debug("calculating SNR for neuron "+j);
-        		ResultProcessor.countSNR(new File(dirname, "neuron0"+j+"fft.txt"));
+        		//ResultProcessor.countSNR(new File(dirname, fft_filenames[j]));
+        		ResultProcessor.countSNR(new File(fft_filepaths[j]));
             }
             //dla 16384 iteracji: 0.507813
             //dla 4x16384 (65536) iteracji: 0.501953

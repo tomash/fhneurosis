@@ -1,0 +1,1 @@
+java -cp /d/devel/java/fft_libs/jtransforms-1.6.jar:/d/java/workspace/Thesis/log4j-1.2.15.jar:./thesis/:./ thesis.ResultProcessor $1 $2 $3
