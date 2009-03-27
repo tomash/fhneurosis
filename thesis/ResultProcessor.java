@@ -39,13 +39,13 @@ public class ResultProcessor
 		Properties props = new Properties();
 		props.load(new FileInputStream(props_file));
 		double dt = new Double(props.getProperty("dt"));
+		double D = new Double(props.getProperty("D"));
 
-		logger.info(String.format("loaded properties: dirname %s, column %d, neuron_number %d, dt %f", dirname, column, neuron_number, dt));
+		logger.info(String.format("loaded properties: dirname %s, column %d, neuron_number %d, dt= %f, D= %g", dirname, column, neuron_number, dt, D));
 		logger.info("counting FFT");
 		String fft_filename = countFFT(results, column, dt, neuron_number);
 		logger.info("counting SNR");
 		ResultProcessor.countSNR(new File(dirname, fft_filename));
-		//return;
 		System.exit(0);
 	}
 
@@ -58,10 +58,6 @@ public class ResultProcessor
     public static String countFFT(File input, int column, double dt, int neuron_number)
         throws IOException
     {
-        //String filename = String.format("neuron%1$02dfft.txt", this.getNnumber());
-        //System.out.println("calculating and dumping FFT into file " + dirname + "/" + filename);
-
-
         LinkedList<Double> v_history = new LinkedList<Double>();
 
         logger.info(String.format("[FFT] loading results from file %s",input.getPath()));
@@ -79,7 +75,6 @@ public class ResultProcessor
             v_history.add(Double.valueOf(strLine.split("\\s")[column]));
         }
 
-        //double dt = neuron.getdt();
         double fn = (1/dt)*0.5;    //maksymalna czestotliwosc - Nyqist!
         double df = fn/n;    //interwal czestotliwosci
         double f=0;
@@ -108,7 +103,6 @@ public class ResultProcessor
         FileWriter fw;
         String dirname = input.getParent();
         String filename = String.format("neuron_%1$02d_%2$02d_fft.txt", neuron_number, column);
-        //System.out.print("\n[FFT] calculating and dumping FFT into file " + dirname + "/" + filename + " ... ");
         logger.info(String.format("[FFT] calculating and dumping FFT into file %s/%s", dirname, filename));
         try
         {
