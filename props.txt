@@ -1,7 +1,7 @@
 #wartosci parametrow eksperymentu
 #Wed Nov 07 09:03:23 CET 2007
 # D - skalowanie szumu sqrt(2D)
-D=5E-5
+D=8E-6
 # r - mnoznik dv
 r=0.08
 # dt - krok czasowy iteracji (sekundy)
@@ -19,9 +19,9 @@ q=1
 # eps - mnoznik dv
 eps=0.0050
 # sens - czulosc neuronu na potencjaly sasiadow
-sens=0.00
+sens=0.1
 # dolne i gorne progi odciecia potencjalu (low -> 0, high -> 1.0)
 low_cut_off=0.4
 high_cut_off=0.8
 # c - ile okresow ma wynosic opoznienie
-c = 1
+c = 0

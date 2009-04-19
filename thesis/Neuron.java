@@ -327,7 +327,7 @@ public class Neuron
 
     public void fill_history()
     {
-        //System.out.println("filling history with 0.0 for nh="+nh);
+        logger.info("filling history with 0.0 for nh="+nh);
         for(int i=0; i< nh; i++)
         {
             v_history.add(0.0);
@@ -404,7 +404,19 @@ public class Neuron
      */
     public double getv(int n)
     {
-        return v_history.getFirst();
+    	double returned_v;
+    	if(v_history.size() > 0)
+    		returned_v = v_history.getFirst();
+    	else
+    		returned_v = v;
+
+
+    	//obcinamy dla minimalizacji wzajemnego wzbudzenia
+    	if(returned_v < low_cut_off)
+    		returned_v = 0.0;
+
+
+    	return returned_v;
     }
 
     public double get_flat_v()
