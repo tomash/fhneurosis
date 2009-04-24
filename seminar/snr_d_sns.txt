@@ -1,6 +1,7 @@
 # SNR(D.sens)
 # SNR dla f=1 (czestotliwosc bazowa)
 # neuron-akceptor (bierny receptor)
+# delay = 0 * T
 # D             sens=0       sens=0.05    sens=0.10
 3.00E-006       0.000        18.867       20.540
 5.00E-006       27.204       60.765       74.273

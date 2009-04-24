@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -32,6 +33,9 @@ public class NeuralNetwork
         }
 
         logger.debug("initializing " + count + "neurons");
+        
+        neurons_snr = new HashMap<Integer, Double>();
+        
         for(int i=0; i<count; i++)
         {
             neurons[i] = new Neuron(dirname);
@@ -116,6 +120,8 @@ public class NeuralNetwork
     	int column_number;
     	String[] fft_filenames = new String[neurons.length];
     	String[] fft_filepaths = new String[neurons.length];
+    	double snr;
+    	
     	try
         {
         	for (int j = 0; j < neurons.length; ++j)
@@ -130,7 +136,8 @@ public class NeuralNetwork
             {
         		logger.debug("calculating SNR for neuron "+j);
         		//ResultProcessor.countSNR(new File(dirname, fft_filenames[j]));
-        		ResultProcessor.countSNR(new File(fft_filepaths[j]));
+        		snr = ResultProcessor.countSNR(new File(fft_filepaths[j]));
+        		neurons_snr.put(j, snr);
             }
             //dla 16384 iteracji: 0.507813
             //dla 4x16384 (65536) iteracji: 0.501953
@@ -176,6 +183,14 @@ public class NeuralNetwork
     {
         this.out.close();
     }
+    
+    public HashMap<Integer, Double> getSNRhash()
+    {
+    	return neurons_snr;
+    }
+    
+    
+    private HashMap<Integer, Double> neurons_snr;
 
     private Neuron[] neurons;
     private PrintWriter out;

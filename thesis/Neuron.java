@@ -12,7 +12,6 @@ import java.util.LinkedList;
 import java.util.Properties;
 import java.util.Random;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import edu.emory.mathcs.jtransforms.fft.*;
@@ -23,7 +22,6 @@ public class Neuron
 
     public Neuron(String dirname)
     {
-    	BasicConfigurator.configure();
 
          eps = 0.005;
          a = 0.5;

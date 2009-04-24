@@ -130,7 +130,7 @@ public class ResultProcessor
 
     }
 
-    public static void countSNR(File input)
+    public static double countSNR(File input)
     	throws IOException
     {
     	LinkedList<Double> v_fft = new LinkedList<Double>();
@@ -181,11 +181,12 @@ public class ResultProcessor
         	++count;
         }
         double mean = (around/count);
-        logger.info(String.format("[SNR] taken %1d values around; mean= %1f; SNR= %f", count, mean, (v_fft.get(index_of_max)/mean)));
+        double snr = (v_fft.get(index_of_max)/mean);
+        logger.info(String.format("[SNR] taken %1d values around; mean= %1f; SNR= %f", count, mean, snr));
 
         //System.out.println("[SNR] indexof max: " + index_of_max);
         //System.out.println("[SNR] value at max: " + v_fft.get(index_of_max));
-
+        return snr;
 
 
     }
