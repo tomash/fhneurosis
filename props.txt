@@ -1,28 +1,15 @@
-#wartosci parametrow eksperymentu
-#Wed Nov 07 09:03:23 CET 2007
-# D - skalowanie szumu sqrt(2D)
-D=5E-5
-# r - mnoznik dv
+#wyjasnienia zmiennych w props_with_properties.txt
+#Sat Apr 25 20:22:52 CEST 2009
+D=0.01
 r=0.08
-# dt - krok czasowy iteracji (sekundy)
-dt=0.00390625
-# tc - czas korelacji szumu
-tc=0.01
-# d -
-d=1.0
-# b - stala dodawana w dw
-b=0.12
-# a - stala okreslajaca szerokosc w liczeniu dv
-a=0.5
-# q - czas trwania okresu (sekundy)
 q=1
-# eps - mnoznik dv
-eps=0.0050
-# sens - czulosc neuronu na potencjaly sasiadow
-sens=0.05
-# dolne i gorne progi odciecia potencjalu (low -> 0, high -> 1.0)
+dt=0.00390625
+tc=0.01
 low_cut_off=0.4
+d=1.0
+sens=0.05
+c=0.69314718055994530942
+b=0.12
+a=0.5
 high_cut_off=0.8
-# c - ile okresow ma wynosic opoznienie
-c = 0.69314718055994530942
-# tzn. ln(2)
+eps=0.0050

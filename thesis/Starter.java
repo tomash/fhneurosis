@@ -18,20 +18,12 @@ public class Starter {
 
         BasicConfigurator.configure();
 
-        GregorianCalendar gc = new GregorianCalendar();
-        String dirname = String.format("%1$tF_%1$tH%1$tM%1$tS", gc);
+        String dirname = NeuralNetwork.generateDirName();
         logger.info("Starting our simulation, results directory is:  " + dirname);
 
         NeuralNetwork nn = new NeuralNetwork(2, dirname);
         nn.run(2048, 8192*2);
-
     }
     
-    public static String generateDirName()
-    {
-    	GregorianCalendar gc = new GregorianCalendar();
-        String dirname = String.format("%1$tF_%1$tH%1$tM%1$tS", gc);
-    	return dirname;
-    }
     
 }

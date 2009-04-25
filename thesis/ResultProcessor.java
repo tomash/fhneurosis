@@ -168,6 +168,10 @@ public class ResultProcessor
 
         logger.info(String.format("[SNR] index of max: %1d ; value at max: %1f (for f=%1f)", index_of_max, max, v_f.get(index_of_max)));
 
+        //wychodzimy jesli index_of_max=0 (czyli nie zostal znaleziony) -- znaczy mamy pusty przebieg
+        if(index_of_max == 0)
+        	return 0.0;
+        
         double around = 0.0;
         int count = 0;
         for(int i=index_of_max-5-1; i<index_of_max-1; ++i)

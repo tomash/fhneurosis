@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import org.apache.log4j.BasicConfigurator;
@@ -15,7 +16,7 @@ public class NeuralNetwork
 
     public NeuralNetwork(int count, String dirname)
     {
-    	logger.debug("initializing " + count + " neurons");
+    	logger.debug("initializing NeuralNetwork with " + count + " neurons");
         neurons = new Neuron[count];
 
         this.dirname = dirname;
@@ -32,7 +33,7 @@ public class NeuralNetwork
             e.printStackTrace();
         }
 
-        logger.debug("initializing " + count + "neurons");
+        logger.debug("initializing " + count + " neurons themselves");
         
         neurons_snr = new HashMap<Integer, Double>();
         
@@ -177,6 +178,13 @@ public class NeuralNetwork
         }
         out.printf("\n");
 
+    }
+    
+    public static String generateDirName()
+    {
+    	GregorianCalendar gc = new GregorianCalendar();
+        String dirname = String.format("%1$tF_%1$tH%1$tM%1$tS", gc);
+    	return dirname;
     }
 
     public void closeOutFile()
