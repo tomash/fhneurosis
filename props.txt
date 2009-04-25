@@ -1,6 +1,6 @@
 #wyjasnienia zmiennych w props_with_properties.txt
-#Sat Apr 25 20:22:52 CEST 2009
-D=0.01
+#Sat Apr 25 21:33:12 CEST 2009
+D=0.000050
 r=0.08
 q=1
 dt=0.00390625
@@ -8,7 +8,7 @@ tc=0.01
 low_cut_off=0.4
 d=1.0
 sens=0.05
-c=0.69314718055994530942
+c=0.0
 b=0.12
 a=0.5
 high_cut_off=0.8
