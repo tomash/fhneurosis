@@ -91,6 +91,8 @@ def format_results(results_hash)
 	return s
 	
 }
-
+//the meat!
 hash_with_results = sweep_over_d()
+
+
 println format_results(hash_with_results)
