@@ -36,7 +36,7 @@ def sweep_over_d()
 	D0 = 1E-6	//startowe
 	D1 = 5E-5	//koncowe
 	delta_d = 1E-6	//krok na poczatku
-	n = 15	//ilosc symulacji
+	n = 30	//ilosc symulacji
 
 	def d_array = []
 	def snrs_neuron0_array = []
@@ -60,9 +60,10 @@ def sweep_over_d()
 		snrs = run_simulation_multi(n)
 		snrs_neuron0_array.add(snrs)
 		
+		//we don't need such dense data after D=1E-5
 		if(d >= 1E-5)
 		{
-			delta_d = 1E-5
+			delta_d = 5E-6
 		}
 	}
 	return ["d_array": d_array, "snrs_array": snrs_neuron0_array]
