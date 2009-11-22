@@ -1,0 +1,17 @@
+wiecej iteracji (512-1024 okresow)
+ew. wiecej przebiegow do usredniania
+1) przesunięcia fazowe pobudzeń wewn.
+2) sieć isingowska Asin(wt-kr+t_i)
+k=2pi/lambda
+ti ~ 5%T
+złożenie w torus (pierścień)
+czy jesteśmy w stanie dobrać wartości tau (opóźnienie - c) żeby układ
+był jak najmniej wrażliwy na rozkład teta_i
+a) zaczynamy od łańcucha zamkniętego
+b) największe kr = 2pi (0>1 == -1=>0)
+c) połączenia dwustronne
+d) łańcuch 16 na początek
+e) SNR uśredniony (krótkie symulacje) -- albo wykres SNR(neuron)
+
+3) zaczynamy: teta_i=0, przesuniecia rzedu PI lub 2PI lub (1/n)2PI -- dobor tau; 
+po dobraniu tau zaczynamy z niezerowymi teta_i

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -86,14 +87,14 @@ public class NeuralNetwork
     	logger.info(iterations + " real runs now! ");
         for (i=0; i < iterations; ++i)
         {
-            out.printf("%f", neurons[0].getT());
+            out.printf(Locale.US, "%f", neurons[0].getT());
             for (int j = 0; j < neurons.length; ++j)
             {
                 neurons[j].iterate();
 
-                out.printf("\t%f", neurons[j].getv());
-                out.printf("\t%f", neurons[j].get_flat_v());
-                out.printf("\t%f", neurons[j].getPeriodic());
+                out.printf(Locale.US, "\t%f", neurons[j].getv());
+                out.printf(Locale.US, "\t%f", neurons[j].get_flat_v());
+                out.printf(Locale.US, "\t%f", neurons[j].getPeriodic());
             }
             for (int j = 0; j < neurons.length; ++j)
             {
@@ -172,11 +173,11 @@ public class NeuralNetwork
         out.printf("# T\t", neurons[0].getT());
         for (int j = 0; j < neurons.length; ++j)
         {
-            out.printf("\tV(%d)", j);
-            out.printf("\tV_flat(%d)", j);
-            out.printf("\tperiodic(%d)", j);
+            out.printf(Locale.US, "\tV(%d)", j);
+            out.printf(Locale.US, "\tV_flat(%d)", j);
+            out.printf(Locale.US, "\tperiodic(%d)", j);
         }
-        out.printf("\n");
+        out.printf(Locale.US, "\n");
 
     }
     

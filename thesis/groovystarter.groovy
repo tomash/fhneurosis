@@ -34,9 +34,9 @@ def sweep_over_d()
 	Logger logger = Logger.getLogger(NeuralNetwork.class)
 	
 	D0 = 1E-6	//startowe
-	D1 = 5E-5	//koncowe
+	D1 = 2E-5	//koncowe
 	delta_d = 1E-6	//krok na poczatku
-	n = 30	//ilosc symulacji
+	n = 1	//ilosc symulacji
 
 	def d_array = []
 	def snrs_neuron0_array = []

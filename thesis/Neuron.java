@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Random;
 
@@ -218,7 +219,7 @@ public class Neuron
 
             for (i = 0; i < n; ++i)
             {
-                outfile.printf("%f\t%f \n", f, arr[i]*arr[i]);
+                outfile.printf(Locale.US, "%f\t%f \n", f, arr[i]*arr[i]);
                 f += df;
             }
             outfile.close();

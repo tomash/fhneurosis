@@ -21,7 +21,7 @@ public class Starter {
         String dirname = NeuralNetwork.generateDirName();
         logger.info("Starting our simulation, results directory is:  " + dirname);
 
-        NeuralNetwork nn = new NeuralNetwork(2, dirname);
+        NeuralNetwork nn = new NeuralNetwork(1, dirname);
         nn.run(2048, 8192*2);
     }
     

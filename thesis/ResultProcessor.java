@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -115,7 +116,7 @@ public class ResultProcessor
 
             for (i = 0; i < n; ++i)
             {
-                outfile.printf("%f\t%f \n", f, arr[i]*arr[i]);
+                outfile.printf(Locale.US, "%f\t%f \n", f, arr[i]*arr[i]);
                 f += df;
             }
             outfile.close();
