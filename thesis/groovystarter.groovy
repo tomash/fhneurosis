@@ -9,19 +9,39 @@ import org.apache.log4j.Logger
 Logger logger = Logger.getLogger(NeuralNetwork.class)
 BasicConfigurator.configure()
 
+def build_line_network(n, phas=0.0)
+{
+	Logger logger = Logger.getLogger(NeuralNetwork.class)
+	def dirnames = []
+    dirname = NeuralNetwork.generateDirName()
+	dirnames.add(dirname)
+	logger.info("Starting our simulation, results directory is:  " + dirname)
+	logger.info("building line network with ${n} neurons and phase jump ${phas}")
+	logger.info("randomising phase by +/i 10%")
+	Random generator = new Random(new Date().getTime())
+	
+	nn = new NeuralNetwork(n, dirname)
+	for(i in 1..(n-1))
+	{
+		randphas = phas * (0.9 + 0.2*generator.nextDouble())
+		logger.info("randomised phase = ${randphas}")
+		nn.getNeurons()[i-1].connected = nn.getNeurons()[i]; 
+		nn.getNeurons()[i].setPhase(randphas*2*Math.PI*i)
+	}
+	return nn
+}
 
-def run_simulation_multi(n)
+
+
+def run_simulation_multi(n, phas)
 {
 	Logger logger = Logger.getLogger(NeuralNetwork.class)
 	def snrs_from_neuron0 = []
-	def dirnames = []
 	for(i in 1..n)
 	{
-		dirname = NeuralNetwork.generateDirName()
-		dirnames.add(dirname)
-		logger.info("Starting our simulation, results directory is:  " + dirname)
-		nn = new NeuralNetwork(2, dirname)
-		nn.run(2048, 8192*2)
+		nn = build_line_network(9, phas)
+		
+		nn.run(2048, 8192*4)
 		snr_hash = nn.getSNRhash()
 		snrs_from_neuron0.add(snr_hash[0])
 	}
@@ -29,14 +49,14 @@ def run_simulation_multi(n)
 	return snrs_from_neuron0
 }
 
-def sweep_over_d()
+def sweep_over_d(phas = 0.0)
 {
 	Logger logger = Logger.getLogger(NeuralNetwork.class)
 	
-	D0 = 1E-6	//startowe
-	D1 = 2E-5	//koncowe
+	D0 = 3E-6	//startowe
+	D1 = 3E-5	//koncowe
 	delta_d = 1E-6	//krok na poczatku
-	n = 1	//ilosc symulacji
+	n = 3	//ilosc symulacji
 
 	def d_array = []
 	def snrs_neuron0_array = []
@@ -57,7 +77,7 @@ def sweep_over_d()
 		logger.info("D value ${d} saved, running ${n} full simulations")
 		
 		d_array.add(d)
-		snrs = run_simulation_multi(n)
+		snrs = run_simulation_multi(n, phas)
 		snrs_neuron0_array.add(snrs)
 		
 		//we don't need such dense data after D=1E-5
@@ -92,7 +112,12 @@ def format_results(results_hash)
 	
 }
 //the meat!
-hash_with_results = sweep_over_d()
+//println("STARTING SWEEP with phas = -0.111")
+//hash_with_results = sweep_over_d(-0.111)
+//println("FINISHED SWEEP with phas = -0.111")
+//println format_results(hash_with_results)
 
-
+println("STARTING SWEEP with phas = +0.111, randomised")
+hash_with_results = sweep_over_d(0.111)
+println("FINISHED SWEEP with phas = +0.111")
 println format_results(hash_with_results)

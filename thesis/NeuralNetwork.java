@@ -56,17 +56,17 @@ public class NeuralNetwork
         logger.info("preparing output file for results");
         this.openOutFile();
 
-        logger.debug("connecting neurons");
+        logger.debug("NOT connecting neurons, do it from Groovy");
         //dirrty hack!
-        if(neurons.length > 1)
-        {
-        	neurons[0].connected = neurons[1];
+        //if(neurons.length > 1)
+        //{
+        	//neurons[0].connected = neurons[1];
         	//neurons[1].connected = neurons[0];
         	//for(int i=1; i<neurons.length; i++)
             //{
             // 	neurons[i].connected = neurons[0];
             //}
-        }
+        //}
 
 
 
@@ -198,11 +198,22 @@ public class NeuralNetwork
     	return neurons_snr;
     }
     
+    public Neuron[] getNeurons() {
+		return neurons;
+	}
+
+	public void setNeurons(Neuron[] neurons) {
+		this.neurons = neurons;
+	}
     
     private HashMap<Integer, Double> neurons_snr;
 
     private Neuron[] neurons;
-    private PrintWriter out;
+    
+    
+
+
+	private PrintWriter out;
 
     private String dirname;
 
