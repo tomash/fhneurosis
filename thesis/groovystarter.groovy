@@ -9,21 +9,29 @@ import org.apache.log4j.Logger
 Logger logger = Logger.getLogger(NeuralNetwork.class)
 BasicConfigurator.configure()
 
-def build_line_network(n, phas=0.0)
+//simulation set parameters
+neuron_count = 2
+phase_shift = 0.111
+simulation_count = 40
+
+
+def build_line_network()
 {
+	n = neuron_count
+	phase = phase_shift
 	Logger logger = Logger.getLogger(NeuralNetwork.class)
 	def dirnames = []
     dirname = NeuralNetwork.generateDirName()
 	dirnames.add(dirname)
 	logger.info("Starting our simulation, results directory is:  " + dirname)
-	logger.info("building line network with ${n} neurons and phase jump ${phas}")
-	logger.info("randomising phase by +/i 10%")
-	Random generator = new Random(new Date().getTime())
+	logger.info("building line network with ${n} neurons and phase jump ${phase}")
+	//logger.info("randomising phase by +/i 10%")
+	//Random generator = new Random(new Date().getTime())
 	
 	nn = new NeuralNetwork(n, dirname)
 	for(i in 1..(n-1))
 	{
-		randphas = phas * (0.9 + 0.2*generator.nextDouble())
+		randphas = phase_shift// * (0.9 + 0.2*generator.nextDouble())
 		logger.info("randomised phase = ${randphas}")
 		nn.getNeurons()[i-1].connected = nn.getNeurons()[i]; 
 		nn.getNeurons()[i].setPhase(randphas*2*Math.PI*i)
@@ -33,33 +41,36 @@ def build_line_network(n, phas=0.0)
 
 
 
-def run_simulation_multi(n, phas)
+def run_simulation_multi()
 {
+	sc = simulation_count
+	
 	Logger logger = Logger.getLogger(NeuralNetwork.class)
-	def snrs_from_neuron0 = []
-	for(i in 1..n)
+	def snrs = []
+	for(i in 1..sc)
 	{
-		nn = build_line_network(9, phas)
+		nn = build_line_network()
 		
-		nn.run(2048, 8192*4)
+		nn.run(2048, 8192*32)
 		snr_hash = nn.getSNRhash()
-		snrs_from_neuron0.add(snr_hash[0])
+		snrs.add(snr_hash)
 	}
 	
-	return snrs_from_neuron0
+	return snrs
 }
 
-def sweep_over_d(phas = 0.0)
+def sweep_over_d()
 {
 	Logger logger = Logger.getLogger(NeuralNetwork.class)
 	
-	D0 = 3E-6	//startowe
-	D1 = 3E-5	//koncowe
+	D0 = 5E-6	//startowe
+	D1 = 5E-5	//koncowe
 	delta_d = 1E-6	//krok na poczatku
-	n = 3	//ilosc symulacji
+	
+	n = simulation_count 	//ilosc symulacji
 
 	def d_array = []
-	def snrs_neuron0_array = []
+    def snr_packs = []
 	
 	props = new Properties()
 	f = new FileInputStream("props.txt")
@@ -77,8 +88,9 @@ def sweep_over_d(phas = 0.0)
 		logger.info("D value ${d} saved, running ${n} full simulations")
 		
 		d_array.add(d)
-		snrs = run_simulation_multi(n, phas)
-		snrs_neuron0_array.add(snrs)
+		// snr_pack: an array of SNRs
+		snr_pack = run_simulation_multi()
+		snr_packs.add(snr_pack)
 		
 		//we don't need such dense data after D=1E-5
 		if(d >= 1E-5)
@@ -86,7 +98,40 @@ def sweep_over_d(phas = 0.0)
 			delta_d = 5E-6
 		}
 	}
-	return ["d_array": d_array, "snrs_array": snrs_neuron0_array]
+	return ["d_array": d_array, "snr_packs_array": snr_packs]
+}
+
+def sweep_over_c(phas)
+{
+	Logger logger = Logger.getLogger(NeuralNetwork.class)
+	
+	c0 = 0.0	//start at
+	c1 = 2*phas	//end at
+	delta_c = 0.1
+
+	props = new Properties()
+	f = new FileInputStream("props.txt")
+	props.load(f)
+	f.close()
+	
+	for(c=c0; c<=c1; c += delta_c)
+	{
+		logger.info("changing c property to ${c}")
+		//new D value saved
+		props.setProperty("c", c.toString())
+		f2 = new FileOutputStream("props.txt")
+		props.store(f2, "wyjasnienia zmiennych w props_with_properties.txt")
+		f2.close()
+		logger.info("c value ${c} saved, running sweep_over_d")
+		
+		logger.info("SWEEP OVER D START with c=${c}")
+		hash_with_results = sweep_over_d(phas)
+		println format_results(hash_with_results)
+		logger.info("SWEEP OVER D FINISH with c=${c}")
+	}
+
+	
+	return 0
 }
 
 def format_results(results_hash)
@@ -99,25 +144,38 @@ def format_results(results_hash)
 	s+="\n"
 	
 	d_count = results_hash["d_array"].size();
-	n_count = results_hash["snrs_array"][0].size();
-	for(j=0; j<n_count; j++)
+	n_count = results_hash["snr_packs_array"][0][0].size();	//amount of neurons
+	sim_count = results_hash["snr_packs_array"][0].size();	//amount of simulations for given params
+
+	
+	for(n=0; n<n_count; ++n)	// over neurons
 	{
-		for(i=0; i<d_count; i++)
-		{
-			s+=String.format("%.6f\t", results_hash['snrs_array'][i][j])
-		}
-		s+="\n"
+		s+=String.format("NEURON %d HERE\n", n);
+		for(c=0; c<sim_count; ++c)
+        {
+			for(i=0; i<d_count; i++)	//over D values
+			{
+				snr = results_hash["snr_packs_array"][i][c][n];
+				s+=String.format("%.6f\t", snr )
+			}
+			s+="\n"
+        }
+
+		
 	}
+	
 	return s
 	
 }
 //the meat!
-//println("STARTING SWEEP with phas = -0.111")
-//hash_with_results = sweep_over_d(-0.111)
-//println("FINISHED SWEEP with phas = -0.111")
-//println format_results(hash_with_results)
-
-println("STARTING SWEEP with phas = +0.111, randomised")
-hash_with_results = sweep_over_d(0.111)
-println("FINISHED SWEEP with phas = +0.111")
+println("STARTING SWEEP with phas = ${phase_shift}")
+hash_with_results = sweep_over_d()
+println("FINISHED SWEEP with phas = ${phase_shift}")
 println format_results(hash_with_results)
+
+//println "2010-07-12 2 neurons, 20 simulations, sweeping over c (delay)"
+//println("STARTING SWEEP with phas = +0.5")
+//hash_with_results = sweep_over_d(0.5)
+//sweep_over_c(0.5)
+//println("FINISHED SWEEP with phas = +0.5")
+//println format_results(hash_with_results)

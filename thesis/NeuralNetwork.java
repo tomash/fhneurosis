@@ -57,18 +57,6 @@ public class NeuralNetwork
         this.openOutFile();
 
         logger.debug("NOT connecting neurons, do it from Groovy");
-        //dirrty hack!
-        //if(neurons.length > 1)
-        //{
-        	//neurons[0].connected = neurons[1];
-        	//neurons[1].connected = neurons[0];
-        	//for(int i=1; i<neurons.length; i++)
-            //{
-            // 	neurons[i].connected = neurons[0];
-            //}
-        //}
-
-
 
     }
 
