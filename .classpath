@@ -4,6 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/d/java/workspace/Thesis/jtransforms-1.6.jar"/>
 	<classpathentry kind="lib" path="/d/java/workspace/Thesis/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="junit-4.8.2.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

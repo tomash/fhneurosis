@@ -9,6 +9,37 @@ import org.apache.log4j.Logger
 Logger logger = Logger.getLogger(NeuralNetwork.class)
 BasicConfigurator.configure()
 
+public class GroovyStarter {
+	public List rawResults
+	public HashMap remappedResults
+	public List d_array
+
+	public HashMap reMap() {
+		remappedResults = [:]
+
+        int d_count = d_array.size()
+		int n_count = rawResults[0][0].size()	//amount of neurons
+		int sim_count = rawResults[0].size()	//amount of simulations for given params
+
+		for(int n=0; n<n_count; ++n)	// over neurons
+		{
+			remappedResults[n] = []
+			for(int c=0; c<sim_count; ++c)
+	        {
+				for(int i=0; i<d_count; i++)	//over D values
+				{
+					if(remappedResults[n][i] == null) { remappedResults[n][i] = [] }
+					remappedResults[n][i].add(rawResults[i][c][n])
+				}
+	        }
+		}
+        
+
+		return remappedResults
+	}
+}
+
+
 //simulation set parameters
 neuron_count = 2
 phase_shift = 0.111
