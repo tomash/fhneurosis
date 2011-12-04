@@ -9,7 +9,7 @@ import org.apache.log4j.Logger
 Logger logger = Logger.getLogger(NeuralNetwork.class)
 BasicConfigurator.configure()
 
-public class GroovyStarter {
+public class ParameterAnalysis {
 	public List rawResults
 	public HashMap remappedResults
 	public List d_array
@@ -41,9 +41,9 @@ public class GroovyStarter {
 
 
 //simulation set parameters
-neuron_count = 9
+neuron_count = 1
 phase_shift = 0.0
-simulation_count = 20
+simulation_count = 2
 
 
 
@@ -61,6 +61,7 @@ def build_line_network()
 	//Random generator = new Random(new Date().getTime())
 	
 	nn = new NeuralNetwork(n, dirname)
+	/*
 	for(i in 1..(n-1))
 	{
 		randphas = phase_shift// * (0.9 + 0.2*generator.nextDouble())
@@ -68,12 +69,13 @@ def build_line_network()
 		nn.getNeurons()[i-1].connected = nn.getNeurons()[i]; 
 		nn.getNeurons()[i].setPhase(randphas*2*Math.PI*i)
 	}
+	*/
 	return nn
 }
 
 
 
-def run_simulation_multi()
+def run_simulation()
 {
 	sc = simulation_count
 	
@@ -83,7 +85,7 @@ def run_simulation_multi()
 	{
 		nn = build_line_network()
 		
-		nn.run(2048, 8192*8)
+		nn.run(2048, 8192*1)
 		snr_hash = nn.getSNRhash()
 		snrs.add(snr_hash)
 	}
@@ -95,8 +97,8 @@ def sweep_over_d()
 {
 	Logger logger = Logger.getLogger(NeuralNetwork.class)
 	
-	D0 = 1E-6	//startowe
-	D1 = 2E-5	//koncowe
+	D0 = 5E-6	//startowe
+	D1 = 5E-5	//koncowe
 	delta_d = 1E-6	//krok na poczatku
 	
 	n = simulation_count 	//ilosc symulacji
@@ -121,8 +123,7 @@ def sweep_over_d()
 		
 		d_array.add(d)
 		// snr_pack: an array of SNRs
-		snr_pack = run_simulation_multi()
-		snr_packs.add(snr_pack)
+		run_simulation()
 		
 		//we don't need such dense data after D=1E-5
 		if(d >= 1E-5)
@@ -130,84 +131,43 @@ def sweep_over_d()
 			delta_d = 5E-6
 		}
 	}
-	return ["d_array": d_array, "snr_packs_array": snr_packs]
+	return ["d_array": d_array]
 }
 
-def sweep_over_c(phas)
+def sweep_over_r()
 {
 	Logger logger = Logger.getLogger(NeuralNetwork.class)
 	
-	c0 = 0.0	//start at
-	c1 = 2*phas	//end at
-	delta_c = 0.1
-
+	r0 = 0.01	//startowe
+	r1 = 0.05	//koncowe
+	delta_r = 0.01	//krok
+	
+	n = simulation_count 	//ilosc symulacji
+	
 	props = new Properties()
 	f = new FileInputStream("props.txt")
 	props.load(f)
 	f.close()
 	
-	for(c=c0; c<=c1; c += delta_c)
+	for(r=r0; r<=r1; r += delta_r)
 	{
-		logger.info("changing c property to ${c}")
+		logger.info("changing r property to ${r}")
 		//new D value saved
-		props.setProperty("c", c.toString())
+		props.setProperty("r", r.toString())
 		f2 = new FileOutputStream("props.txt")
 		props.store(f2, "wyjasnienia zmiennych w props_with_properties.txt")
 		f2.close()
-		logger.info("c value ${c} saved, running sweep_over_d")
+		logger.info("r value ${r} saved, running ${n} full simulations")
 		
-		logger.info("SWEEP OVER D START with c=${c}")
-		hash_with_results = sweep_over_d(phas)
-		println format_results(hash_with_results)
-		logger.info("SWEEP OVER D FINISH with c=${c}")
+		run_simulation()
 	}
-
-	
-	return 0
+	return []
 }
 
-def format_results(results_hash)
-{
-	s="#D: \n"
-	for(d in results_hash["d_array"])
-	{
-		s+=String.format("%.6f\t", d)
-	}
-	s+="\n"
-	
-	d_count = results_hash["d_array"].size();
-	n_count = results_hash["snr_packs_array"][0][0].size();	//amount of neurons
-	sim_count = results_hash["snr_packs_array"][0].size();	//amount of simulations for given params
 
-	
-	for(n=0; n<n_count; ++n)	// over neurons
-	{
-		s+=String.format("NEURON %d HERE\n", n);
-		for(c=0; c<sim_count; ++c)
-        {
-			for(i=0; i<d_count; i++)	//over D values
-			{
-				snr = results_hash["snr_packs_array"][i][c][n];
-				s+=String.format("%.6f\t", snr )
-			}
-			s+="\n"
-        }
-
-		
-	}
-	
-	return s
-	
-}
 //the meat!
-println("STARTING SWEEP with phas = ${phase_shift}")
-hash_with_results = sweep_over_d()
-println("FINISHED SWEEP with phas = ${phase_shift}")
-println format_results(hash_with_results)
+//println("SWEEPING OVER D, ${simulation_count} runs for every value")
+//hash_with_results = sweep_over_d()
 
-//println "2010-07-12 2 neurons, 20 simulations, sweeping over c (delay)"
-//println("STARTING SWEEP with phas = +0.5")
-//hash_with_results = sweep_over_d(0.5)
-//sweep_over_c(0.5)
-//println("FINISHED SWEEP with phas = +0.5")
-//println format_results(hash_with_results)
+println("SWEEPING OVER r, ${simulation_count} runs for every value")
+hash_with_results = sweep_over_r()

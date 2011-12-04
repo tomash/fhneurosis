@@ -3,4 +3,7 @@ temp
 *.class
 200*
 2010*
+2011*
 calc_sheets/*
+*stdout.txt
+props.txt

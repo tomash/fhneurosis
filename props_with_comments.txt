@@ -2,7 +2,7 @@
 #Wed Nov 07 09:03:23 CET 2007
 # D - skalowanie szumu sqrt(2D)
 D=1E-6
-# r - mnoznik dv
+# r - mnoznik sin
 r=0.08
 # dt - krok czasowy iteracji (sekundy)
 dt=0.00390625
